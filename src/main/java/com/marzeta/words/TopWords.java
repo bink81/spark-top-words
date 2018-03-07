@@ -10,6 +10,8 @@ import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.spark_project.guava.collect.Ordering;
 import org.spark_project.guava.collect.SortedSetMultimap;
 import org.spark_project.guava.collect.TreeMultimap;
@@ -20,6 +22,8 @@ import scala.Tuple2;
  * Sample Spark application that shows top words in a given text file
  */
 public final class TopWords {
+	private static final Logger LOGGER = LoggerFactory.getLogger(TopWords.class);
+
 	private static SortedSetMultimap<Long, String> wordCount(final String filename) {
 		try (JavaSparkContext sc = new JavaSparkContext(new SparkConf().setMaster("local").setAppName("Top Words"))) {
 			JavaRDD<String> input = sc.textFile(filename);
@@ -62,7 +66,7 @@ public final class TopWords {
 
 	public static void main(final String[] args) {
 		if (args.length == 0) {
-			System.out.println("Usage: TopWords <file> [maxLimit]");
+			LOGGER.info("Usage: TopWords <file> [maxLimit]");
 			System.exit(0);
 		}
 		SortedSetMultimap<Long, String> results = wordCount(args[0]);
